@@ -6,35 +6,41 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 global PATH
 global GCMD
+global commandBarCommand
 
 
 ^t::
 	PATH := GETEXPLORERPATH()
 
-	customColor = 333333
-	GUI TERMINAL: NEW
-	GUI TERMINAL: FONT, s14 cFFFFFF
-	GUI TERMINAL: COLOR, %customColor%, %customColor%
-	GUI TERMINAL: MARGIN, 0, 0
+	global CommandBar
+	global commandBarCommand
 
-	WINSET, TRANSCOLOR, %customColor% 20, TERMINAL	
-	GUI TERMINAL: +LASTFOUND -CAPTION +ALWAYSONTOP
+	customColor := 333333
+	GUI CommandBar: NEW
+	GUI CommandBar: FONT, s14 cFFFFFF
+	GUI CommandBar: COLOR, %customColor%, %customColor%
+	GUI CommandBar: MARGIN, 12, 12
 
-	GUI TERMINAL: ADD, EDIT, w500 r1 vcommand	
-	GUI TERMINAL: SHOW, xCENTER	y100, TERMINAL
+	WINSET, TRANSCOLOR, %customColor% 20, CommandBar
+	GUI CommandBar: +LASTFOUND -CAPTION +ALWAYSONTOP
+
+	;GUI CommandBar: ADD, TEXT, y13 c9966FF, %prompt%
+	GUI CommandBar: ADD, TEXT, y13, >
+	GUI CommandBar: ADD, EDIT, y12 h70  w600 cE6E6E6 r1 -E0x200 vcommandBarCommand
+	GUI CommandBar: SHOW, xCENTER	y100, CommandBar
 RETURN
 
 
 
 
-#IFWINACTIVE TERMINAL
+#IFWINACTIVE CommandBar
 enter::
-	GUI TERMINAL: SUBMIT
-	GCMD = %command%
+	GUI CommandBar: SUBMIT
+	GCMD = %commandBarCommand%
 	RUNCOMMAND(GCMD, PATH)
 RETURN
 
-escape::GUI TERMINAL: DESTROY
+escape::GUI CommandBar: DESTROY
 
 
 
